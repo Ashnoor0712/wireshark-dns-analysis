@@ -26,29 +26,10 @@ This project helped build foundational cybersecurity skills in packet capture, D
 
 ## Key Filters Used
 
-```text
-dns
-```
-
-Shows DNS traffic.
-
-```text
-dns && !mdns
-```
-
-Shows DNS traffic while excluding multicast DNS local network chatter.
-
-```text
-dns.qry.name
-```
-
-Helps identify queried domain names more clearly.
-
-```text
-dns && ipv6
-```
-
-Shows DNS traffic over IPv6.
+* dns - Shows DNS traffic.
+* dns && !mdns - Shows DNS traffic while excluding multicast DNS local network chatterz
+* dns.qry.name - Helps identify queried domain names more clearly.
+* dns && ipv6 - Shows DNS traffic over IPv6.
 
 ## Procedure
 
@@ -118,42 +99,10 @@ Filtering with an IPv4 address did not capture all DNS traffic because the syste
 
 ## Why This Project Matters
 
-This project builds beginner-level cybersecurity skills that are directly relevant to SOC analyst and network security roles. It shows the ability to:
-
 * Capture and inspect live traffic
 * Interpret DNS behavior
 * Troubleshoot missing results
 * Analyze network communications with an investigative mindset
-
-## Resume Bullet
-
-* Performed network traffic analysis using Wireshark on macOS, capturing and filtering DNS queries to identify domain resolution patterns, background service communications, and IPv6-based traffic behavior.
-
-## Suggested Repository Structure
-
-```text
-wireshark-dns-analysis/
-├── README.md
-├── screenshots/
-│   ├── wireshark-dns-filter.png
-│   ├── dns-query-example.png
-│   └── nslookup-espn.png
-└── notes/
-    └── lab-notes.txt
-```
-
-## Suggested Screenshot Captions
-
-* `wireshark-dns-filter.png` — DNS traffic isolated using `dns && !mdns`
-* `dns-query-example.png` — Packet details showing a DNS query and queried domain
-* `nslookup-espn.png` — Terminal output forcing a fresh DNS lookup for `espn.com`
-
-## Future Improvements
-
-* Analyze TLS traffic next
-* Compare normal domains with suspicious-looking domains
-* Export a clean `.pcapng` sample for review
-* Create a follow-up project on HTTP vs HTTPS traffic analysis
 
 ## Author
 
