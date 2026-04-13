@@ -1,4 +1,4 @@
-# Wireshark DNS Traffic Analysis
+# Wireshark DNS Traffic Analysis – Hands-on network inspection of real DNS queries and responses
 
 ## Project Overview
 
