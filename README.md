@@ -1,109 +1,261 @@
-# Wireshark DNS Traffic Analysis – Hands-on network inspection of real DNS queries and responses
+# 🌐 Wireshark DNS Traffic Analysis – Network Inspection & Security Analysis
 
-## Project Overview
+## 📌 Project Overview
 
-This project demonstrates basic network traffic analysis using Wireshark on macOS. The goal was to capture live network traffic, isolate DNS activity, remove local multicast noise, and analyze the domains contacted by the system during normal browsing and manual DNS lookups.
+This project demonstrates hands-on network traffic analysis using Wireshark on macOS, focusing on DNS (Domain Name System) activity. The goal was to capture live network traffic, isolate DNS queries, and analyze how systems communicate with external services during normal browsing.
 
-This project helped build foundational cybersecurity skills in packet capture, DNS analysis, traffic filtering, troubleshooting, and interpreting background network communications.
+This project simulates how a **security analyst monitors network behavior**, identifies domain requests, filters noise, and interprets traffic patterns to understand system activity and potential risks.
 
-## Objective
+---
 
-* Capture live traffic from the Wi-Fi interface using Wireshark
-* Filter DNS traffic from general network noise
-* Identify real domain lookups made by the system
-* Understand how websites trigger multiple background service requests
-* Practice beginner-friendly network analysis and troubleshooting
+## 🎯 Objectives
 
-## Tools Used
+* Capture live network traffic using Wireshark
+* Filter and isolate DNS traffic from background noise
+* Analyze domain name queries and responses
+* Understand how websites trigger multiple backend services
+* Develop practical network troubleshooting and analysis skills
+
+---
+
+## 🛠️ Tools Used
 
 * Wireshark 4.6.4
 * macOS
-* Terminal (`nslookup`)
+* Terminal (nslookup)
 
-## Interface Used
+---
 
-* `Wi-Fi: en0`
+## 🖥️ Interface Used
 
-## Key Filters Used
+* Wi-Fi: en0
 
-* dns - Shows DNS traffic.
-* dns && !mdns - Shows DNS traffic while excluding multicast DNS local network chatterz
-* dns.qry.name - Helps identify queried domain names more clearly.
-* dns && ipv6 - Shows DNS traffic over IPv6.
+---
 
-## Procedure
+# 🔍 Methodology
 
-1. Installed Wireshark and configured the helper tool required for packet capture on macOS.
-2. Opened Wireshark and selected the `Wi-Fi: en0` interface.
-3. Started a live capture.
-4. Generated traffic by visiting websites and performing a manual DNS lookup using:
+## 1. Traffic Capture
 
-```bash
-nslookup espn.com
-```
+* Selected Wi-Fi interface (en0)
+* Started live packet capture
+* Generated traffic by:
 
-5. Applied filters to isolate DNS traffic.
-6. Examined packet details to identify queried domains and related background services.
-7. Noted that some traffic used IPv6 rather than IPv4, which affected filtering.
+  * Visiting websites (Google, YouTube, etc.)
+  * Performing manual DNS lookup:
+    nslookup espn.com
 
-## Findings
+---
 
-The capture showed that one user action can trigger multiple DNS lookups for background services.
+## 2. Filtering DNS Traffic
+
+### Filters Used
+
+dns
+→ Displays all DNS traffic
+
+dns && !mdns
+→ Removes multicast DNS noise from local network
+
+dns.qry.name
+→ Highlights queried domain names
+
+dns && ipv6
+→ Captures DNS traffic over IPv6
+
+---
+
+## 3. Packet Analysis
+
+* Inspected individual packets
+* Analyzed DNS query and response structure
+* Observed source/destination IPs and domain resolution
+
+---
+
+# 📊 Key Findings
+
+### Multiple DNS Requests per Action
+
+A single user action triggered multiple DNS queries.
 
 Examples observed:
 
-* `accounts.google.com` — Google authentication service
-* `akamai...net` — content delivery network traffic
-* `bam.cell.nr-data.net` — analytics and monitoring service
-* `espn.com` — manual DNS lookup target
+* accounts.google.com → Authentication service
+* akamai...net → Content Delivery Network (CDN)
+* bam.cell.nr-data.net → Analytics/monitoring service
+* espn.com → Manual DNS lookup target
 
-## Key Observations
+---
 
-* DNS requests are used to translate domain names into IP addresses.
-* Some website traffic did not appear immediately because of DNS caching.
-* Manual lookup with `nslookup` forced a fresh DNS request.
-* Multicast DNS (`mdns`) created noise and needed to be filtered out.
-* IPv6 DNS traffic was present, so filtering only by IPv4 missed valid packets.
-* A single website often depends on several external services such as authentication, analytics, fonts, and content delivery networks.
+### Background Services Are Always Active
 
-## Challenges and Troubleshooting
+Websites rely on multiple external services:
 
-### 1. Blank filtered results
+* Authentication systems
+* Analytics trackers
+* CDNs for performance
+* APIs and embedded content
 
-At times, filters returned no packets. This happened because:
+---
 
-* DNS responses were cached
-* A fresh DNS request had not occurred during the capture
-* Traffic was using IPv6 instead of the expected IPv4 address
+### IPv6 Traffic Presence
 
-### 2. Noise from local network traffic
+* DNS traffic was observed over IPv6
+* Filtering only IPv4 missed valid packets
 
-`MDNS` traffic appeared frequently and had to be excluded using:
+---
 
-```text
-dns && !mdns
-```
+### DNS Caching Behavior
 
-### 3. IPv4 vs IPv6 mismatch
+* Previously visited domains did not always generate new queries
+* Manual lookup (nslookup) forced fresh DNS requests
 
-Filtering with an IPv4 address did not capture all DNS traffic because the system was using IPv6 for DNS queries.
+---
 
-## What I Learned
+# 🧠 Key Security Insights
 
-* How to install and use Wireshark for live packet capture
-* How DNS works at a practical level
-* How to apply display filters to isolate meaningful traffic
-* How caching affects network visibility
-* How to recognize normal background domains versus potentially suspicious ones
-* How websites communicate with multiple supporting services behind the scenes
+DNS traffic reveals:
 
-## Why This Project Matters
+* What websites a system is contacting
+* Hidden background services and third-party dependencies
+* Potential indicators of suspicious or malicious activity
 
-* Capture and inspect live traffic
-* Interpret DNS behavior
-* Troubleshoot missing results
-* Analyze network communications with an investigative mindset
+Example:
 
-## Author
+* Unknown or unusual domains could indicate malware communication
+* High-frequency DNS requests may signal automated behavior
+
+---
+
+# 🔐 Security Analysis
+
+DNS is a critical part of network communication but also a common target for attacks.
+
+### Potential Risks:
+
+* DNS spoofing / poisoning
+* Data exfiltration via DNS
+* Communication with malicious domains
+* Tracking via analytics and third-party services
+
+### Observations from this Lab:
+
+* All observed domains were legitimate
+* No suspicious or malicious traffic detected
+* Traffic patterns matched normal browsing behavior
+
+---
+
+# ⚠️ Challenges & Troubleshooting
+
+### 1. Blank Filter Results
+
+Cause:
+
+* DNS caching
+* No new DNS queries generated
+
+Solution:
+
+* Performed manual lookup using:
+  nslookup espn.com
+
+---
+
+### 2. Noise from Local Traffic
+
+Cause:
+
+* Multicast DNS (mDNS)
+
+Solution:
+
+* Applied filter:
+  dns && !mdns
+
+---
+
+### 3. IPv4 vs IPv6 Mismatch
+
+Cause:
+
+* System using IPv6 for DNS queries
+
+Solution:
+
+* Used filter:
+  dns && ipv6
+
+---
+
+# 📚 Key Learnings
+
+* How to capture and analyze live network traffic
+* How DNS works in real-world environments
+* How to apply Wireshark filters effectively
+* How caching impacts network visibility
+* How to differentiate normal vs suspicious traffic
+* How websites depend on multiple backend services
+
+---
+
+# 🧩 Analyst Perspective
+
+A security analyst can use DNS traffic to:
+
+* Monitor user activity patterns
+* Detect suspicious domains
+* Identify potential malware communication
+* Investigate network incidents
+
+Even without payload data, DNS provides **valuable intelligence about system behavior**.
+
+---
+
+# 📸 Screenshots & Analysis
+
+### DNS Query Analysis
+
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 10 21 03 PM" src="https://github.com/user-attachments/assets/654a9c3c-63eb-4ee9-9c78-b49faecb3c68" />
+
+
+* Shows domain resolution requests and responses
+* Highlights external services contacted during browsing
+
+### TCP & HTTPS Traffic (Port 443)
+
+<img width="1440" height="900" alt="Screenshot 2026-04-12 at 10 24 33 PM" src="https://github.com/user-attachments/assets/52a966fe-d2d0-475d-b71d-e2a942b355f8" />
+
+
+* Demonstrates encrypted communication after DNS resolution
+* Shows connection setup and packet exchange
+
+---
+
+# 🚀 Future Improvements
+
+* Analyze HTTP/HTTPS traffic patterns
+* Investigate suspicious domains using threat intelligence tools
+* Capture longer sessions for deeper analysis
+* Combine with SIEM tools (e.g., Splunk)
+* Perform malware traffic analysis in a controlled lab
+
+---
+
+# 🏁 Conclusion
+
+This project demonstrates how DNS traffic can be analyzed to understand system behavior and network communication patterns. By filtering noise and focusing on relevant data, it is possible to gain meaningful insights into how systems interact with external services.
+
+This lab provides a strong foundation for:
+
+* Network traffic analysis
+* DNS investigation
+* Security monitoring and threat detection
+
+---
+
+## 👤 Author
 
 Ashnoor Jattana
+
+---
